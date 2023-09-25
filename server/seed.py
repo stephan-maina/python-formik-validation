@@ -1,29 +1,26 @@
 #!/usr/bin/env python3
 
-import email
-from random import choice as rc, randint
+from app import db
+from models import Customer
 
-from faker import Faker
+if __name__ == '__main__':
+    db.create_all()
 
-from app import app
-from models import db, Customer
+    # Add sample customer data to the database
+    customers_data = [
+        {'name': 'John Doe', 'email': 'john@example.com', 'age': 30},
+        {'name': 'Jane Smith', 'email': 'jane@example.com', 'age': 25},
+        # Add more customer data here as needed
+    ]
 
+    for customer_data in customers_data:
+        customer = Customer(**customer_data)
+        db.session.add(customer)
 
-fake = Faker()
+    db.session.commit()
 
-usernames = [fake.first_name() for i in range(4)]
-if "Duane" not in usernames:
-    usernames.append("Duane")
+    print("Sample customer data added to the database.")
 
-def make_customers():
-
-    Customer.query.delete()
-    
-    customers = []
-
-    for i in range(3):
-        customer = Customer(
-            email=fake.email(),
             age= randint(0, 125),
             name=fake.name()
         )
